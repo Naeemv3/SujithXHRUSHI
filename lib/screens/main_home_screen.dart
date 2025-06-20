@@ -9,6 +9,7 @@ import 'courses_screen.dart';
 import 'chat_screen.dart';
 import 'create_project_screen.dart';
 import 'view_pitches_screen.dart';
+import '../auth/google_sign_in_service.dart';
 
 class MainHomeScreen extends StatefulWidget {
   const MainHomeScreen({super.key});
@@ -19,6 +20,7 @@ class MainHomeScreen extends StatefulWidget {
 
 class _MainHomeScreenState extends State<MainHomeScreen> {
   int _selectedIndex = 0;
+  final _signInService = GoogleSignInService();
 
   final List<Widget> _pages = [
     const DashboardScreen(),
@@ -64,6 +66,24 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
 
   final User? user = FirebaseAuth.instance.currentUser;
 
+  Future<void> _handleLogout() async {
+    try {
+      await _signInService.signOut();
+      if (mounted) {
+        Navigator.pushReplacementNamed(context, '/login');
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Logout failed: ${e.toString()}'),
+            backgroundColor: Colors.red.shade400,
+          ),
+        );
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -102,13 +122,18 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
             margin: const EdgeInsets.only(right: 16),
             child: CircleAvatar(
               backgroundColor: const Color(0xFF6366F1).withOpacity(0.1),
-              child: Text(
-                user?.displayName?.substring(0, 1).toUpperCase() ?? 'U',
-                style: const TextStyle(
-                  color: Color(0xFF6366F1),
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
+              backgroundImage: user?.photoURL != null 
+                  ? NetworkImage(user!.photoURL!)
+                  : null,
+              child: user?.photoURL == null
+                  ? Text(
+                      user?.displayName?.substring(0, 1).toUpperCase() ?? 'U',
+                      style: const TextStyle(
+                        color: Color(0xFF6366F1),
+                        fontWeight: FontWeight.bold,
+                      ),
+                    )
+                  : null,
             ),
           ),
         ],
@@ -128,13 +153,13 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
         children: [
           Container(
             height: 200,
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               gradient: LinearGradient(
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
                 colors: [
-                  const Color(0xFF6366F1),
-                  const Color(0xFF8B5CF6),
+                  Color(0xFF6366F1),
+                  Color(0xFF8B5CF6),
                 ],
               ),
             ),
@@ -147,14 +172,19 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
                     CircleAvatar(
                       radius: 32,
                       backgroundColor: Colors.white.withOpacity(0.2),
-                      child: Text(
-                        user?.displayName?.substring(0, 1).toUpperCase() ?? 'U',
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
+                      backgroundImage: user?.photoURL != null 
+                          ? NetworkImage(user!.photoURL!)
+                          : null,
+                      child: user?.photoURL == null
+                          ? Text(
+                              user?.displayName?.substring(0, 1).toUpperCase() ?? 'U',
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            )
+                          : null,
                     ),
                     const SizedBox(height: 16),
                     Text(
@@ -234,7 +264,7 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
             Icons.logout_rounded,
             'Logout',
             const Color(0xFFEF4444),
-            () => Navigator.of(context).popUntil((route) => route.isFirst),
+            _handleLogout,
           ),
           const SizedBox(height: 16),
         ],
