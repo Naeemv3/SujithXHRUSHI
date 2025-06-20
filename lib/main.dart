@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'firebase_options.dart';
 
 import 'auth/google_sign_in_service.dart';
@@ -33,6 +34,8 @@ class SkillBridgeApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print('🎯 Building SkillBridgeApp'); // Debug print
+    
     return MaterialApp(
       title: 'SkillBridge',
       debugShowCheckedModeBanner: false,
@@ -88,11 +91,13 @@ class AuthWrapper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final signInService = GoogleSignInService();
+    print('🔍 Building AuthWrapper'); // Debug print
     
-    return StreamBuilder(
-      stream: signInService.authStateChanges,
+    return StreamBuilder<User?>(
+      stream: FirebaseAuth.instance.authStateChanges(),
       builder: (context, snapshot) {
+        print('🔄 Auth state: ${snapshot.connectionState}, hasData: ${snapshot.hasData}, user: ${snapshot.data?.email}'); // Debug print
+        
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Scaffold(
             body: Center(
@@ -103,11 +108,13 @@ class AuthWrapper extends StatelessWidget {
           );
         }
         
-        if (snapshot.hasData) {
+        if (snapshot.hasData && snapshot.data != null) {
           // User is signed in
+          print('✅ User is signed in: ${snapshot.data!.email}');
           return const MainHomeScreen();
         } else {
           // User is not signed in
+          print('❌ User is not signed in');
           return const LoginScreen();
         }
       },
@@ -134,6 +141,8 @@ class _LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin
   @override
   void initState() {
     super.initState();
+    print('🎬 LoginScreen initState'); // Debug print
+    
     _animationController = AnimationController(
       duration: const Duration(milliseconds: 1200),
       vsync: this,
@@ -173,17 +182,23 @@ class _LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin
   }
 
   Future<void> _handleSignIn() async {
+    print('🔐 Starting sign in process'); // Debug print
     setState(() => _isLoading = true);
     
     try {
       final user = await signInService.signInWithGoogle();
+      print('👤 Sign in result: ${user?.email}'); // Debug print
+      
       if (mounted && user != null) {
+        print('✅ Sign in successful, navigating to home');
         // Navigate to home screen
         Navigator.pushReplacementNamed(context, '/home');
       } else if (mounted) {
+        print('❌ Sign in failed or cancelled');
         _showErrorSnackBar('Login failed or cancelled');
       }
     } catch (e) {
+      print('💥 Sign in error: $e'); // Debug print
       if (mounted) {
         _showErrorSnackBar('Login error: ${e.toString()}');
       }
@@ -212,6 +227,8 @@ class _LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin
 
   @override
   Widget build(BuildContext context) {
+    print('🎨 Building LoginScreen'); // Debug print
+    
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
