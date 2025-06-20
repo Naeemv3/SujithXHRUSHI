@@ -17,7 +17,7 @@ void main() async {
     );
     print('✅ Firebase initialized successfully');
     
-    // Run Firebase tests in debug mode
+    // Run Firebase tests in debug mode only
     if (const bool.fromEnvironment('dart.vm.product') == false) {
       await FirebaseTestService.runAllTests();
     }
