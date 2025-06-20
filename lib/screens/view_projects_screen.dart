@@ -43,8 +43,8 @@ class ViewProjectsScreen extends StatelessWidget {
             padding: const EdgeInsets.all(24),
             itemCount: docs.length,
             itemBuilder: (context, index) {
-              final data = doc.data() as Map<String, dynamic>;
-              final projectId = doc.id;
+              final data = docs[index].data() as Map<String, dynamic>;
+              final projectId = docs[index].id;
               
               return _buildProjectCard(context, data, projectId, isAdmin);
             },
