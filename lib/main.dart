@@ -346,15 +346,10 @@ class _LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin
                                     color: Colors.white,
                                     borderRadius: BorderRadius.circular(6),
                                   ),
-                                  child: Image.asset(
-                                    'assets/google_logo.png',
-                                    width: 20,
-                                    height: 20,
-                                    errorBuilder: (context, error, stackTrace) => const Icon(
-                                      Icons.login_rounded,
-                                      color: Color(0xFF6366F1),
-                                      size: 20,
-                                    ),
+                                  child: const Icon(
+                                    Icons.login_rounded,
+                                    color: Color(0xFF6366F1),
+                                    size: 20,
                                   ),
                                 ),
                             label: Text(

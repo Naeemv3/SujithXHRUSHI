@@ -24,7 +24,7 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
 
   final List<Widget> _pages = [
     const DashboardScreen(),
-    QuizScreen(skill: "Python"),
+    const QuizScreen(skill: "Python"),
     const MySubmissionsScreen(),
     const ViewProjectsScreen(),
     const CoursesScreen(),
