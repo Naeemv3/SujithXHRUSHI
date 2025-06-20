@@ -1,0 +1,39 @@
+{
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "skillbridge-979ed",
+          "appId": "1:708432497622:android:22bfd17772e6ccce2f3277",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "skillbridge-979ed",
+          "configurations": {
+            "android": "1:708432497622:android:22bfd17772e6ccce2f3277",
+            "ios": "1:708432497622:ios:61d121e85d0c13182f3277",
+            "macos": "1:708432497622:ios:61d121e85d0c13182f3277",
+            "web": "1:708432497622:web:ce67f6d3574d15052f3277",
+            "windows": "1:708432497622:web:5e833899277fc3612f3277"
+          }
+        }
+      }
+    }
+  },
+  "functions": [
+  {
+    "source": "functions",
+    "codebase": "default",
+    "ignore": [
+      "node_modules",
+      ".git",
+      "firebase-debug.log",
+      "firebase-debug.*.log",
+      "*.local"
+    ]
+  }
+]
+
+}
